@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSphere - Your Financial Assistant</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Tagesschrift:regular" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>FinSphere</h2>
+            </div>
+            <ul class="menu">
+                <li class="active" ondblclick="window.location.href='{{ url_for('hero') }}'">
+                    <a href="{{ url_for('hero') }}"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li><a href="{{ url_for('analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="{{ url_for('budget') }}"><i class="fas fa-wallet"></i> Budget</a></li>
+                <li><a href="{{ url_for('investment') }}"><i class="fas fa-money-bill-trend-up"></i> Investments</a></li>
+                <li><a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="{{ url_for('help') }}"><i class="fas fa-question-circle"></i> Help</a></li>
+                <li><a href="{{ url_for('feedback') }}"><i class="fas fa-comment"></i> Feedback</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Welcome to FinSphere</h1>
+                <p>Your personal finance assistant that helps you manage your money, plan your budget, and make smart investment decisions.</p>
+                <div class="quick-actions">
+                    <a href="budget.html" class="action-card">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Budget Planning</h3>
+                        <p>Create and manage your personal budget</p>
+                    </a>
+                    <a href="analytics.html" class="action-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Investment Advice</h3>
+                        <p>Get personalized investment recommendations</p>
+                    </a>
+                    <a href="savings.html" class="action-card">
+                        <i class="fas fa-piggy-bank"></i>
+                        <h3>Saving Tips</h3>
+                        <p>Learn strategies to save more money</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Chat Box -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Financial Assistant</h3>
+                    <button class="minimize-chat"><i class="fas fa-minus"></i></button>
+                </div>
+                <div class="chat-body">
+                    <div class="chat-messages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                <p>Hello! I'm your financial assistant. How can I help you today?</p>
+                            </div>
+                        </div>
+                        <!-- More messages will be added here via JavaScript -->
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Ask about your finances...">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End of main-content -->
+    </div> <!-- End of container -->
+
+    <!-- Footer (moved OUTSIDE container) -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>FinSphere Features</h3>
+                <ul>
+                    <li>Budget Planning</li>
+                    <li>Investment Advice</li>
+                    <li>Saving Tips</li>
+                    <li>Market Analysis</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: support@finbot.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 FinBot. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        function openModal() {
+            document.getElementById('tipsModal').style.display = 'block';
+        }
+        function closeModal() {
+            document.getElementById('tipsModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            const modal = document.getElementById('tipsModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

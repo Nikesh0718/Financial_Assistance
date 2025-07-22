@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Analysis - FinBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>FinSphere</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="{{ url_for('hero') }}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{{ url_for('analytics') }}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li class="active"><a href="{{ url_for('budget') }}"><i class="fas fa-wallet"></i> Budget</a></li>
+                <li><a href="{{ url_for('investment') }}"><i class="fas fa-money-bill-wave"></i> Investments</a></li>
+                <li><a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="{{ url_for('help') }}"><i class="fas fa-question-circle"></i> Help</a></li>
+                <li><a href="{{ url_for('feedback') }}"><i class="fas fa-comment"></i> Feedback</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" placeholder="Search for budget topics...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+
+            <!-- Budget Header -->
+            <div class="page-header">
+                <h1>Budget Analysis</h1>
+                <p>Track your spending, set budget goals, and get insights on your financial habits</p>
+            </div>
+
+            <!-- Budget Overview -->
+                        <div class="budget-section">
+            <div class="section-header">
+                <h2>Monthly Budget Overview</h2>
+                <button class="action-button" onclick="openModal()"><i class="fas fa-edit"></i> Edit Budget</button>
+
+            </div>
+            
+            <div class="budget-overview">
+                <div class="budget-stats">
+                <div class="stat-card">
+                    <h3>Total Income</h3>
+                    <p class="amount">₹58,000</p>
+                    <p class="change positive">+₹3,000 from last month</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Expenses</h3>
+                    <p class="amount" id="totalExpenses" >₹39,500</p>
+                    <p class="change negative">+₹1,500 from last month</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Savings</h3>
+                    <p class="amount" id="totalSavings">₹18,500</p>
+                    <p class="change positive">+₹1,500 from last month</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Savings Rate</h3>
+                    <p class="amount" id="savingsRate">31.9%</p>
+                    <p class="change positive">+1.2% from last month</p>
+                </div>
+                </div>
+                
+                <div class="budget-chart-container">
+                <canvas id="budget-chart"></canvas>
+                </div>
+                           <div class="chart-container">
+  <canvas id="expense-breakdown-chart"></canvas>
+</div>
+            </div>
+            </div>
+
+            <!-- Expense Breakdown -->
+
+                    <div class="budget-section">
+            <div class="section-header">
+                <h2>Expense Breakdown</h2>
+                <select class="time-range">
+                <option>This Month</option>
+                <option>Last Month</option>
+                <option>Last 3 Months</option>
+                <option>Last 6 Months</option>
+                <option>This Year</option>
+                </select>
+            </div>
+
+            <div class="expense-table">
+                <table>
+                <thead>
+                    <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td><i class="fas fa-home"></i> Rent</td>
+                    <td>₹19,000</td>
+                    <td>₹19,000</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 100%"></div></div></td>
+                    <td><span class="trend neutral"><i class="fas fa-minus"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-utensils"></i> Groceries</td>
+                    <td>₹6,500</td>
+                    <td>₹6,000</td>
+                    <td><div class="progress-bar"><div class="progress over" style="width: 108%"></div></div></td>
+                    <td><span class="trend negative"><i class="fas fa-arrow-up"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-bus"></i> Transport</td>
+                    <td>₹3,000</td>
+                    <td>₹3,500</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 85.7%"></div></div></td>
+                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-bolt"></i> Electricity & Gas</td>
+                    <td>₹2,800</td>
+                    <td>₹3,000</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 93.3%"></div></div></td>
+                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-film"></i> Entertainment</td>
+                    <td>₹2,000</td>
+                    <td>₹1,500</td>
+                    <td><div class="progress-bar"><div class="progress over" style="width: 133%"></div></div></td>
+                    <td><span class="trend negative"><i class="fas fa-arrow-up"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-shopping-bag"></i> Online Shopping</td>
+                    <td>₹3,000</td>
+                    <td>₹3,000</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 100%"></div></div></td>
+                    <td><span class="trend neutral"><i class="fas fa-minus"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-stethoscope"></i> Medical</td>
+                    <td>₹1,200</td>
+                    <td>₹2,000</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 60%"></div></div></td>
+                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i></span></td>
+                    </tr>
+                    <tr>
+                    <td><i class="fas fa-book"></i> Education/Classes</td>
+                    <td>₹2,000</td>
+                    <td>₹2,000</td>
+                    <td><div class="progress-bar"><div class="progress" style="width: 100%"></div></div></td>
+                    <td><span class="trend neutral"><i class="fas fa-minus"></i></span></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
+
+            <!-- Modal Popup for Editing Budget -->
+                <div id="budgetModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeModal()">&times;</span>
+                    <div class="budget-section">
+                    <div class="section-header">
+                        <h2>Edit Expense Breakdown</h2>
+                    </div>
+                    <div class="expense-table">
+                        <table>
+                        <thead>
+                            <tr>
+                            <th>Category</th>
+                            <th>Amount (₹)</th>
+                            <th>Budget (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editable-expenses">
+                            <tr>
+                            <td>Rent</td>
+                            <td><input type="number" value="15000"></td>
+                            <td><input type="number" value="15000"></td>
+                            </tr>
+                            <tr>
+                            <td>Groceries</td>
+                            <td><input type="number" value="6500"></td>
+                            <td><input type="number" value="6000"></td>
+                            </tr>
+                            <tr>
+                            <td>Transport</td>
+                            <td><input type="number" value="3000"></td>
+                            <td><input type="number" value="3500"></td>
+                            </tr>
+                            <tr>
+                            <td>Electricity & Gas</td>
+                            <td><input type="number" value="2800"></td>
+                            <td><input type="number" value="3000"></td>
+                            </tr>
+                            <tr>
+                            <td>Entertainment</td>
+                            <td><input type="number" value="2000"></td>
+                            <td><input type="number" value="1500"></td>
+                            </tr>
+                            <tr>
+                            <td>Online Shopping</td>
+                            <td><input type="number" value="3000"></td>
+                            <td><input type="number" value="3000"></td>
+                            </tr>
+                            <tr>
+                            <td>Medical</td>
+                            <td><input type="number" value="1200"></td>
+                            <td><input type="number" value="2000"></td>
+                            </tr>
+                            <tr>
+                            <td>Education/Classes</td>
+                            <td><input type="number" value="2000"></td>
+                            <td><input type="number" value="2000"></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                        <button class="action-button" onclick="calculateBudget()">Save Changes</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            <!-- Savings Goals -->
+                    <div class="budget-section">
+                <div class="section-header">
+                    <h2>Savings Goals</h2>
+                    <button class="action-button" id="addGoalButton"><i class="fas fa-plus"></i> Add New Goal</button>
+                </div>
+
+                <div class="savings-goals">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <h3>Emergency Fund</h3>
+                            <span class="goal-status">In Progress</span>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 65%"></div>
+                            </div>
+                            <div class="goal-amounts">
+                                <span>₹1,30,000 / ₹2,00,000</span>
+                                <span>65%</span>
+                            </div>
+                        </div>
+                        <div class="goal-details">
+                            <p><i class="fas fa-calendar"></i> Target Date: December 2025</p>
+                            <p><i class="fas fa-money-bill"></i> Monthly Contribution: ₹5,000</p>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <h3>Vacation Fund (Goa Trip)</h3>
+                            <span class="goal-status">In Progress</span>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 40%"></div>
+                            </div>
+                            <div class="goal-amounts">
+                                <span>₹20,000 / ₹50,000</span>
+                                <span>40%</span>
+                            </div>
+                        </div>
+                        <div class="goal-details">
+                            <p><i class="fas fa-calendar"></i> Target Date: October 2025</p>
+                            <p><i class="fas fa-money-bill"></i> Monthly Contribution: ₹2,500</p>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <h3>New Bike</h3>
+                            <span class="goal-status">Not Started</span>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 0%"></div>
+                            </div>
+                            <div class="goal-amounts">
+                                <span>₹0 / ₹1,25,000</span>
+                                <span>0%</span>
+                            </div>
+                        </div>
+                        <div class="goal-details">
+                            <p><i class="fas fa-calendar"></i> Target Date: March 2026</p>
+                            <p><i class="fas fa-money-bill"></i> Monthly Contribution: ₹0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Trends -->
+            <div class="budget-section">
+                <div class="section-header">
+                    <h2>Savings Trends</h2>
+                    <select class="time-range">
+                        <option>Last 6 Months</option>
+                        <option>Last Year</option>
+                        <option>Last 2 Years</option>
+                    </select>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="savings-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>Financial Assistant</h3>
+                <button class="minimize-chat"><i class="fas fa-minus"></i></button>
+            </div>
+            <div class="chat-body">
+                <div class="chat-messages">
+                    <div class="message bot">
+                        <div class="message-content">
+                            <p>Hello! Need help with your budget analysis? Ask me anything!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about your budget...">
+                    <button><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>FinBot Features</h3>
+                <ul>
+                    <li>Budget Planning</li>
+                    <li>Investment Advice</li>
+                    <li>Saving Tips</li>
+                    <li>Market Analysis</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: support@finbot.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 FinBot. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+</body>
+</html> 

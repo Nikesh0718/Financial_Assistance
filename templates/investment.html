@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investment Advisor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous"/>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f4f4; }
+    header { background: #000000; color: white; padding: 20px 0; text-align: center; }
+    .container { max-width: 1000px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .search-box { display: flex; justify-content: center; margin-bottom: 30px; }
+    input[type="text"] { width: 60%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    input[type="number"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; }
+    button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+    button:hover { background-color: #0056b3; }
+    .card { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .title { font-weight: bold; font-size: 18px; margin-bottom: 5px; color: #343a40; }
+    .features { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin: 30px 0; }
+    .feature-card { flex: 1; min-width: 220px; background: #ffffff; border: 1px solid #ccc; border-radius: 8px; padding: 20px; text-align: center; transition: 0.3s; }
+    .feature-card:hover { background-color: #e0f7fa; transform: scale(1.02); }
+    .feature-card i { font-size: 30px; margin-bottom: 10px; color: #007bff; }
+    ul#sipList { padding-left: 20px; }
+    ul#sipList li { margin-bottom: 10px; }
+    .error { color: #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    .success { color: #155724; background-color: #d4edda; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    .loading { color: #0c5460; background-color: #d1ecf1; padding: 10px; border-radius: 5px; margin: 10px 0; text-align: center; }
+    label { font-weight: bold; margin-bottom: 5px; display: block; }
+    form { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Investment Advisor Dashboard</h1>
+    <p>Smart Insights. Better SIP Decisions.</p>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search Mutual Funds, SIP strategies..." />
+      <button onclick="getAdvice()">Search</button>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="card">
+      <h2>Top 10 SIP Recommendations</h2>
+      <ul id="sipList">
+        <!-- SIPs will be loaded here -->
+      </ul>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <i class="fas fa-balance-scale"></i>
+        <h3>Risk Analyzer</h3>
+        <p>Evaluate your risk profile before investing.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-chart-line"></i>
+        <h3>Diversify Portfolio</h3>
+        <p>Understand the value of diversification in SIPs.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-calculator"></i>
+        <h3>SIP Calculator</h3>
+        <p>Estimate returns based on investment and duration.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>SIP Calculator</h2>
+      <form id="sipForm" onsubmit="calculateSIP(event)">
+        <label>Monthly Investment (₹):</label>
+        <input type="number" id="monthlyInvestment" required min="500" placeholder="e.g., 5000">
+
+        <label>Annual Interest Rate (%):</label>
+        <input type="number" step="0.01" id="annualRate" required min="1" max="30" placeholder="e.g., 12.5">
+
+        <label>Investment Duration (Years):</label>
+        <input type="number" id="years" required min="1" max="50" placeholder="e.g., 10">
+
+        <button type="submit">Calculate</button>
+      </form>
+      <div id="sipResult" class="card" style="margin-top: 20px; display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Mock data for SIP search and recommendations
+    const sipDatabase = [
+  { "name": "HDFC Top 100 Fund", "details": "Large cap fund with consistent returns. 3-year return: 18.5%", "category": "Large Cap", "risk": "Moderate" },
+  { "name": "SBI Small Cap Fund", "details": "High growth potential small cap fund. 3-year return: 22.3%", "category": "Small Cap", "risk": "High" },
+  { "name": "ICICI Prudential Bluechip Fund", "details": "Diversified large cap equity fund. 3-year return: 16.8%", "category": "Large Cap", "risk": "Moderate" },
+  { "name": "Axis Mutual Fund", "details": "Balanced equity fund with moderate risk. 3-year return: 15.2%", "category": "Multi Cap", "risk": "Moderate" },
+  { "name": "Kotak Standard Multicap Fund", "details": "Multi-cap fund for diversified investment. 3-year return: 17.9%", "category": "Multi Cap", "risk": "Moderate" },
+  { "name": "Mirae Asset Large Cap Fund", "details": "Focus on large cap stocks with stable returns. 3-year return: 19.1%", "category": "Large Cap", "risk": "Low" },
+  { "name": "Nippon India Small Cap Fund", "details": "Small cap fund with aggressive growth strategy. 3-year return: 24.7%", "category": "Small Cap", "risk": "High" },
+  { "name": "UTI Flexi Cap Fund", "details": "Flexible investment across market capitalizations. 3-year return: 16.4%", "category": "Flexi Cap", "risk": "Moderate" },
+  { "name": "DSP Mid Cap Fund", "details": "Mid cap focused fund for balanced growth. 3-year return: 20.1%", "category": "Mid Cap", "risk": "High" },
+  { "name": "Franklin India Prima Fund", "details": "Large cap fund with value investing approach. 3-year return: 14.9%", "category": "Large Cap", "risk": "Low" },
+  
+  { "name": "Motilal Oswal Midcap Fund", "details": "High-performing mid cap fund with strong returns. 3-year return: 34%", "category": "Mid Cap", "risk": "High" },
+  { "name": "Invesco India Midcap Fund", "details": "Consistent mid cap performer with solid growth. 3-year return: 33%", "category": "Mid Cap", "risk": "High" },
+  { "name": "HSBC Small Cap Fund", "details": "Aggressive small cap fund with strong upside potential. 3-year return: 27%", "category": "Small Cap", "risk": "High" },
+  { "name": "ITI Small Cap Fund", "details": "High-growth small cap strategy for aggressive investors. 3-year return: 34%", "category": "Small Cap", "risk": "High" },
+  { "name": "Bandhan Small Cap Fund", "details": "Top-performing small cap fund with significant returns. 3-year return: 36%", "category": "Small Cap", "risk": "High" },
+  { "name": "Aditya Birla Sun Life PSU Equity Fund", "details": "Focused on public sector equities with strong returns. 3-year return: 36%", "category": "Thematic/PSU", "risk": "High" },
+  { "name": "Nifty Midcap 150 Index Fund", "details": "Index fund tracking mid cap segment. 3-year return: 28%", "category": "Index Fund", "risk": "Moderate" },
+  { "name": "DSP Large Cap Fund", "details": "Stable large cap fund with steady performance. 3-year return: 22%", "category": "Large Cap", "risk": "Moderate" },
+  { "name": "Bandhan Large Cap Fund", "details": "Large cap strategy with diversified exposure. 3-year return: 21%", "category": "Large Cap", "risk": "Moderate" },
+  { "name": "LIC MF Small Cap Fund", "details": "Emerging small cap fund with aggressive growth. 3-year return: 25%", "category": "Small Cap", "risk": "High" }
+];
+
+
+    async function getAdvice() {
+      const query = document.getElementById('search').value.toLowerCase().trim();
+      const resultsDiv = document.getElementById('results');
+      
+      // Show loading state
+      resultsDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      try {
+        if (!query) {
+          resultsDiv.innerHTML = '<div class="error">Please enter a search term.</div>';
+          return;
+        }
+        
+        // Filter based on search query
+        const data = sipDatabase.filter(item => 
+          item.name.toLowerCase().includes(query) || 
+          item.details.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query) ||
+          item.risk.toLowerCase().includes(query)
+        );
+        
+        resultsDiv.innerHTML = '';
+
+        if (!data.length) {
+          resultsDiv.innerHTML = '<div class="error">No mutual funds found matching your search. Try different keywords like "large cap", "small cap", "SBI", "HDFC", etc.</div>';
+        } else {
+          resultsDiv.innerHTML = '<div class="success">Found ' + data.length + ' matching funds:</div>';
+          data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+              <div class="title">${item.name}</div>
+              <div>${item.details}</div>
+              <div style="margin-top: 10px;">
+                <small><strong>Category:</strong> ${item.category} | <strong>Risk:</strong> ${item.risk}</small>
+              </div>
+            `;
+            resultsDiv.appendChild(div);
+          });
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = '<div class="error">Error occurred while searching. Please try again.</div>';
+        console.error('Search error:', error);
+      }
+    }
+
+    async function loadTopSIPs() {
+      const ul = document.getElementById('sipList');
+      ul.innerHTML = '<li class="loading">Loading top SIP recommendations...</li>';
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      try {
+        // Get top 10 SIPs sorted by returns
+        const topSips = sipDatabase.slice(0, 10);
+        
+        ul.innerHTML = '';
+        topSips.forEach((sip, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${index + 1}. ${sip.name}</strong> - ${sip.details}`;
+          ul.appendChild(li);
+        });
+      } catch (error) {
+        ul.innerHTML = '<li class="error">Error loading SIP recommendations. Please refresh the page.</li>';
+        console.error('Load SIPs error:', error);
+      }
+    }
+
+    function calculateSIP(event) {
+      event.preventDefault();
+      
+      const P = parseFloat(document.getElementById('monthlyInvestment').value);
+      const r = parseFloat(document.getElementById('annualRate').value) / 12 / 100;
+      const n = parseFloat(document.getElementById('years').value) * 12;
+      
+      // Validation
+      if (P <= 0 || r <= 0 || n <= 0) {
+        document.getElementById('sipResult').innerHTML = '<div class="error">Please enter valid positive values for all fields.</div>';
+        document.getElementById('sipResult').style.display = 'block';
+        return;
+      }
+      
+      const totalInvestment = P * n;
+      const futureValue = P * ((Math.pow(1 + r, n) - 1) * (1 + r)) / r;
+      const profit = futureValue - totalInvestment;
+      
+      document.getElementById('sipResult').innerHTML = `
+        <div class="success">
+          <h3>SIP Calculation Results</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+            <div>
+              <strong>Monthly Investment:</strong> ₹${P.toLocaleString('en-IN')}<br>
+              <strong>Investment Period:</strong> ${n/12} years<br>
+              <strong>Annual Interest Rate:</strong> ${(r*12*100).toFixed(2)}%
+            </div>
+            <div>
+              <strong>Total Investment:</strong> ₹${totalInvestment.toLocaleString('en-IN')}<br>
+              <strong>Estimated Returns:</strong> ₹${profit.toLocaleString('en-IN')}<br>
+              <strong>Future Value:</strong> ₹${futureValue.toLocaleString('en-IN')}
+            </div>
+          </div>
+          <div style="margin-top: 15px; padding: 10px; background-color: #e8f5e8; border-radius: 5px;">
+            <strong>Wealth Gained:</strong> ₹${profit.toLocaleString('en-IN')} ({((profit/totalInvestment)*100).toFixed(1)}% of total investment)
+          </div>
+        </div>
+      `;
+      document.getElementById('sipResult').style.display = 'block';
+    }
+
+    // Add Enter key support for search
+    document.getElementById('search').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        getAdvice();
+      }
+    });
+
+    // Load SIPs on page load
+    window.addEventListener('load', function() {
+      loadTopSIPs();
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+

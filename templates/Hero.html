@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinSphere - Your Financial Companion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Main Container -->
+  <div class="container">
+    <nav class="navbar">
+      <div class="logo">
+        <div class="logo-icon">⬢</div>
+        <div class="logo-text">FINSPHERE</div>
+      </div>
+
+      <div class="nav-links">
+        <a href="{{ url_for('hero') }}">Home</a>
+        <a href="{{ url_for('analytics') }}">Analytics</a>
+        <a href="{{ url_for('budget') }}">Budget</a>
+        <a href="{{ url_for('investment') }}">Investments</a>
+        <a href="{{ url_for('about') }}">About Us</a>
+        <a href="{{ url_for('help') }}">Help</a>
+        <a href="{{ url_for('feedback') }}">Feedback</a>
+      </div>
+
+    </nav>
+
+    <section class="hero">
+      <div class="light-beam"></div>
+      <div class="light-rays"></div>
+      <div class="dust-container" id="dust-container"></div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">Helping you stay on track, <br> Every step of the way</h1>
+        <p class="hero-subtitle">Get instant answers to all your financial questions</p>
+        <div class="hero-buttons">
+          <a href="{{ url_for('index') }}" class="btn btn-light">Try Now</a>
+          <a href="#" class="btn btn-outline" id="learn-more-btn">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+   <section class="features">
+  <div class="feature-card" onclick="location.href='{{ url_for('investment') }}'">
+    <i class="fas fa-chart-line"></i>
+    <h3>Investment Advice</h3>
+    <p>Get personalized investment recommendations.</p>
+  </div>
+
+  <div class="feature-card">
+    <i class="fas fa-piggy-bank"></i>
+    <h3>Savings Tips</h3>
+    <p>Learn how to save money effectively.</p>
+  </div>
+
+  <div class="feature-card" onclick="location.href='{{ url_for('budget') }}'">
+    <i class="fas fa-calculator"></i>
+    <h3>Budget Planning</h3>
+    <p>Create and manage your budget efficiently.</p>
+  </div>
+</section>
+
+
+  </div>
+
+  <!-- Learn More Modal -->
+  <div class="modal" id="learn-more-modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      
+      <div class="modal-header">
+        <h2>Financial Resources</h2>
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="investment">Investment Advice</button>
+          <button class="tab-btn" data-tab="savings">Savings Tips</button>
+          <button class="tab-btn" data-tab="budget">Budget Planning</button>
+        </div>
+      </div>
+      
+      <div class="tab-content">
+        <div class="tab-pane active" id="investment-tab">
+          <h3><i class="fas fa-chart-line"></i> Investment Advice</h3>
+          <div class="content-card">
+            <h4>Diversify Your Portfolio</h4>
+            <p>Spread your investments across different asset classes like stocks, bonds, and ETFs to reduce risk.</p>
+          </div>
+          <div class="content-card">
+            <h4>Start Early</h4>
+            <p>The power of compound interest means the earlier you start investing, the more your money will grow over time.</p>
+          </div>
+          <div class="content-card">
+            <h4>Research Before Investing</h4>
+            <p>Always do thorough research on companies or funds before investing your hard-earned money.</p>
+          </div>
+        </div>
+        
+        <div class="tab-pane" id="savings-tab">
+          <h3><i class="fas fa-piggy-bank"></i> Savings Tips</h3>
+          <div class="content-card">
+            <h4>Automate Your Savings</h4>
+            <p>Set up automatic transfers to your savings account on payday to ensure consistent saving habits.</p>
+          </div>
+          <div class="content-card">
+            <h4>Emergency Fund</h4>
+            <p>Build an emergency fund that covers 3-6 months of expenses to prepare for unexpected situations.</p>
+          </div>
+          <div class="content-card">
+            <h4>Track Your Spending</h4>
+            <p>Use budgeting apps or spreadsheets to track where your money goes and identify areas to cut back.</p>
+          </div>
+        </div>
+        
+        <div class="tab-pane" id="budget-tab">
+          <h3><i class="fas fa-calculator"></i> Budget Planning</h3>
+          <div class="content-card">
+            <h4>The 50/30/20 Rule</h4>
+            <p>Allocate 50% of your income for needs, 30% for wants, and 20% for savings and debt repayment.</p>
+          </div>
+          <div class="content-card">
+            <h4>Zero-Based Budgeting</h4>
+            <p>Assign every dollar of your income a specific purpose, so that income minus expenses equals zero.</p>
+          </div>
+          <div class="content-card">
+            <h4>Review and Adjust</h4>
+            <p>Regularly review your budget and make adjustments as your income, expenses, and financial goals change.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
